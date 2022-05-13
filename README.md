@@ -12,7 +12,10 @@ Scraper for LinkedIn full profile data. Unlike others scrapers, it's working in 
 const scrapedin = require('scrapedin')
 
 const profileScraper = await scrapedin({ email: 'login@mail.com', password: 'pass' })
-const profile = await profileScraper('https://www.linkedin.com/in/some-profile/')
+const userProfile = await profileScraper('https://www.linkedin.com/in/some-profile/')
+const company =  await profileScraper('https://www.linkedin.com/company/some-company/')
+const companyProfile = await company.profile();
+const companyPosts = await company.post.getPosts({untilPostId: '6923560299572695040'});
 ```
 
 - If you are looking for a crawler to automatically extract multiple profiles see [scrapedin-crawler](https://github.com/linkedtales/scrapedin-linkedin-crawler)
