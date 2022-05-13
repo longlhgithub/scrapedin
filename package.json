@@ -1,7 +1,7 @@
 {
-  "name": "@mvegter/scrapedin",
+  "name": "@longlhgithub/scrapedin",
   "version": "1.0.30",
-  "description": "linkedin scraper for 2020 website",
+  "description": "linkedin scraper support fetching company posts",
   "keywords": [
     "linkedin",
     "scraper",
@@ -13,10 +13,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/linkedtales/scrapedin.git"
+    "url": "git+https://github.com/longlhgithub/scrapedin.git"
   },
   "bugs": {
-    "url": "https://github.com/linkedtales/scrapedin/issues"
+    "url": "https://github.com/longlhgithub/scrapedin/issues"
   },
   "author": "Wagner Leonardi <leonardiwagner@gmail.com>",
   "license": "Apache-2.0",
@@ -30,5 +30,5 @@
   "engines": {
     "node": ">= 7.6.0"
   },
-  "homepage": "https://github.com/linkedtales/scrapedin#readme"
+  "homepage": "https://github.com/longlhgithub/scrapedin#readme"
 }
