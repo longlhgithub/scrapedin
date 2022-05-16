@@ -48,7 +48,7 @@ module.exports = (browser, cookies, url, puppeteerAuthenticate = undefined) => {
         await page.$eval('.feeds li.feed-item:last-of-type', (e) => {
           e.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'end' })
         })
-        await new Promise((r) => setTimeout(r, 1000))
+        await new Promise((r) => setTimeout(r, 2000))
         await page.waitForSelector('.spinner.hidden')
       }
 
