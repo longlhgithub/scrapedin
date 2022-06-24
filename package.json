@@ -1,6 +1,6 @@
 {
   "name": "@longlh/scrapedin",
-  "version": "1.0.34",
+  "version": "1.0.36",
   "description": "linkedin scraper support fetching company posts",
   "keywords": [
     "linkedin",
