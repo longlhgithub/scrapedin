@@ -37,5 +37,5 @@ module.exports = async ({ cookies, email, password, isHeadless, hasToLog, hasToG
     logger.warn('email/password and cookies wasn\'t provided, only public data will be collected')
   }
 
-  return (url, waitMs) => url.includes('/school/') || url.includes('/company/') ? company(browser, cookies, url, waitMs, hasToGetContactInfo, puppeteerAuthenticate) : profile(browser, cookies, url, waitMs, hasToGetContactInfo, puppeteerAuthenticate)
+  return (url, waitMs) => url.includes('/showcase/') || url.includes('/school/') || url.includes('/company/') ? company(browser, cookies, url, waitMs, hasToGetContactInfo, puppeteerAuthenticate) : profile(browser, cookies, url, waitMs, hasToGetContactInfo, puppeteerAuthenticate)
 }
