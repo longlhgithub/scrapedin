@@ -1,6 +1,6 @@
 {
   "name": "@longlh/scrapedin",
-  "version": "1.0.36",
+  "version": "1.0.37",
   "description": "linkedin scraper support fetching company posts",
   "keywords": [
     "linkedin",
@@ -22,6 +22,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "puppeteer": "12.0.1",
+    "puppeteer-cluster": "^0.23.0",
     "winston": "3.3.3"
   },
   "devDependencies": {

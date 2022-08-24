@@ -20,33 +20,46 @@ module.exports = async ({
   url,
   puppeteerAuthenticate,
   mobile,
+  pageCallback,
 }) => {
-  const page = await browser.newPage()
-  await page.setDefaultNavigationTimeout(0)
+  const result = await browser.execute(
+    {
+      cookies,
+      url,
+      puppeteerAuthenticate,
+      mobile,
+      pageCallback,
+    },
+    async (task) => {
+      const { page, data } = task
+      const { cookies, url, puppeteerAuthenticate, mobile, pageCallback } = data
+      await page.setDefaultNavigationTimeout(0)
+      if (cookies) {
+        await page.setCookie(...cookies)
+      }
+      const ua = mobile ? mobileAgents : agents
+      await page.setUserAgent(ua[Math.floor(Math.random() * ua.length)])
+      await page.setExtraHTTPHeaders({
+        'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
+      })
+      if (mobile)
+        await page.setViewport({
+          width: 390,
+          height: 844,
+        })
+      else
+        await page.setViewport({
+          width: 1920,
+          height: 1080,
+        })
 
-  if (cookies) {
-    await page.setCookie(...cookies)
-  }
-  const ua = mobile ? mobileAgents : agents
-  await page.setUserAgent(ua[Math.floor(Math.random() * ua.length)])
-  await page.setExtraHTTPHeaders({
-    'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
-  })
-  if (mobile)
-    await page.setViewport({
-      width: 390,
-      height: 844,
-    })
-  else
-    await page.setViewport({
-      width: 1920,
-      height: 1080,
-    })
+      if (puppeteerAuthenticate) {
+        await page.authenticate(puppeteerAuthenticate)
+      }
 
-  if (puppeteerAuthenticate) {
-    await page.authenticate(puppeteerAuthenticate)
-  }
-
-  await page.goto(url, { waitUntil: 'networkidle2' })
-  return page
+      await page.goto(url, { waitUntil: 'networkidle2' })
+      if (pageCallback) return await pageCallback(page)
+    },
+  )
+  return result
 }

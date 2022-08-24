@@ -1,9 +1,49 @@
 const puppeteer = require('puppeteer')
+const {Cluster} = require('puppeteer-cluster');
 const login = require('./login')
 const profile = require('./profile/profile')
 const company = require('./company/company')
 const { COMPANY_TAGS } = require('./constants')
 const logger = require('./logger')(__filename)
+
+const maxUseCount = 10;
+let useCount = 0;
+let clusterInstance = null;
+
+const createCluster = async () => {
+  if (clusterInstance && (useCount < maxUseCount)) {     
+      logger.info(`scrapedin: reuse cluster instance, count: ${useCount}, max: ${maxUseCount}`);
+      useCount++;
+      return clusterInstance;
+  }
+  logger.info('scrapedin: create new cluster instance');
+  if (clusterInstance) {
+      try {          
+        logger.info('scrapedin: clean up cluster instance');
+          await clusterInstance.idle();
+          await clusterInstance.close();
+      } finally {
+          clusterInstance = null;
+      }
+  }
+  const cluster = await Cluster.launch({
+      concurrency: Cluster.CONCURRENCY_PAGE,
+      maxConcurrency: 5,
+      retryLimit: 3,
+      retryDelay: 1000,
+      workerCreationDelay: 1000,
+      timeout: 15*60*1000, // 15 minutes
+      puppeteerOptions: {ignoreHTTPSErrors: true, headless: true, args: [
+          '--no-sandbox', // meh but better resource comsuption
+          '--disable-setuid-sandbox', // same,
+      ]},
+      puppeteer,
+  });
+  clusterInstance = cluster;
+  // reset usecount for new cluster
+  useCount = 0;
+  return clusterInstance;
+};
 
 module.exports = async ({ cookies, email, password, isHeadless, hasToLog, hasToGetContactInfo, puppeteerArgs, puppeteerAuthenticate, endpoint } = { isHeadless: true, hasToLog: false }) => {
   if (!hasToLog) {
@@ -11,29 +51,13 @@ module.exports = async ({ cookies, email, password, isHeadless, hasToLog, hasToG
   }
   logger.info('initializing')
 
-  let browser
-  if (endpoint) {
-    browser = await puppeteer.connect({
-      browserWSEndpoint: endpoint
-    })
-  } else {
-    const args = Object.assign({ headless: isHeadless, args: ['--no-sandbox'] }, puppeteerArgs)
-    browser = await puppeteer.launch(args)
-  }
+  const browser = await createCluster();
 
   if (cookies) {
     logger.info('using cookies, login will be bypassed')
   } else if (email && password) {
     logger.info('email and password was provided, we\'re going to login...')
-
-    try {
       await login(browser, email, password, logger)
-    } catch (e) {
-      if (!endpoint) {
-        await browser.close()
-      }
-      throw e
-    }
   } else {
     logger.warn('email/password and cookies wasn\'t provided, only public data will be collected')
   }
