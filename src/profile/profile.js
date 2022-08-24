@@ -12,8 +12,7 @@ const logger = require('../logger')(__filename)
 module.exports = async (browser, cookies, url, waitTimeToScrapMs = 500, hasToGetContactInfo = false, puppeteerAuthenticate = undefined) => {
   logger.info(`starting scraping url: ${url}`)
 
-  return await openPage({ browser, cookies, url, puppeteerAuthenticate, pageCallback: async(page)=>{
-    const page = await openPage({ browser, cookies, url, puppeteerAuthenticate })
+  return await openPage({ browser, cookies, url, puppeteerAuthenticate, pageCallback: async(page)=>{  
     const profilePageIndicatorSelector = '.pv-profile-section'
     await page.waitForSelector(profilePageIndicatorSelector, { timeout: 5000 })
       .catch(() => {
