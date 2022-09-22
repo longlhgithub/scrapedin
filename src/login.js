@@ -7,8 +7,11 @@ module.exports = async (browser, email, password) => {
   logger.info(`logging at: ${url}`)
   const result = await openPage({ browser, url, pageCallback:async (page)=>{    
 
-    if(page.url().indexOf('linkedin.com/login')==-1)
-    return;
+    if(page.url().indexOf('linkedin.com/login')==-1){
+      await new Promise(r=>{setTimeout(()=>{r()}, 100)})
+      return;
+    }
+    
     await page.waitForSelector('#username')
   
     await page.$('#username')

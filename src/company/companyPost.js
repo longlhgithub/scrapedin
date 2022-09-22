@@ -7,7 +7,9 @@ const logger = require('../logger')(__filename)
 module.exports = (browser, cookies, url, puppeteerAuthenticate = undefined) => {
   return {
     getPosts: async ({ untilPostId, pageSize }) => {
-      logger.info(`starting scraping url: ${url}`)
+      const msg = `starting scraping url: ${url}`;
+      logger.info(msg)
+      console.log(msg)
       const posts = await openPage({
         browser,
         cookies,
@@ -45,7 +47,6 @@ module.exports = (browser, cookies, url, puppeteerAuthenticate = undefined) => {
 
             await page.$eval('.feeds li.feed-item:last-of-type', (e) => {
               e.scrollIntoView({
-                behavior: 'smooth',
                 block: 'end',
                 inline: 'end',
               })
