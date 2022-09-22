@@ -26,6 +26,7 @@ module.exports = async (
   company.profile = async () => {
     const result = await openPage({
       browser,
+      cookies,
       url,
       pageCallback: async (page) => {
         if (url.includes('legacySchoolId=')) {
@@ -40,7 +41,6 @@ module.exports = async (
           await page.goto(url, { waitUntil: 'networkidle2' })
         }
         return (await scrapSection(page, template.profile))[0]
-        await page.close()
       },
     })
 

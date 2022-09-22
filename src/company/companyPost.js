@@ -54,7 +54,6 @@ module.exports = (browser, cookies, url, puppeteerAuthenticate = undefined) => {
             await page.waitForSelector('.spinner.hidden')
           }
 
-          await page.close()
           logger.info(`finished scraping url: ${url}`)
           return posts
         },

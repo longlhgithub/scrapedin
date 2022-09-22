@@ -45,13 +45,13 @@ const createCluster = async () => {
   return clusterInstance;
 };
 
-module.exports = async ({ cookies, email, password, isHeadless, hasToLog, hasToGetContactInfo, puppeteerArgs, puppeteerAuthenticate, endpoint } = { isHeadless: true, hasToLog: false }) => {
+module.exports = async ({ cookies, email, password, isHeadless, hasToLog, hasToGetContactInfo, puppeteerArgs, puppeteerAuthenticate, puppeteerCluster } = { isHeadless: true, hasToLog: false }) => {
   if (!hasToLog) {
     logger.stopLogging()
   }
   logger.info('initializing')
 
-  const browser = await createCluster();
+  const browser = puppeteerCluster || await createCluster();
 
   if (cookies) {
     logger.info('using cookies, login will be bypassed')
